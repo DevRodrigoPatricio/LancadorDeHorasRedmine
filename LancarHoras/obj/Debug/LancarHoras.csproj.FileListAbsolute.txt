@@ -1,0 +1,10 @@
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\bin\Debug\LancarHoras.exe.config
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\bin\Debug\LancarHoras.exe
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\bin\Debug\LancarHoras.pdb
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\obj\Debug\LancarHoras.csproj.AssemblyReference.cache
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\obj\Debug\LancarHoras.Form1.resources
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\obj\Debug\LancarHoras.Properties.Resources.resources
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\obj\Debug\LancarHoras.csproj.GenerateResource.cache
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\obj\Debug\LancarHoras.csproj.CoreCompileInputs.cache
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\obj\Debug\LancarHoras.exe
+C:\Users\rodrigo.pereira\Desktop\LancarHoras\LancarHoras\obj\Debug\LancarHoras.pdb
