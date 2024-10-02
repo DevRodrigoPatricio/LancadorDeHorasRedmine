@@ -1,7 +1,7 @@
 ﻿
 namespace LancarHoras
 {
-    partial class Form1
+    partial class FrmLancaHoras
     {
         /// <summary>
         /// Variável de designer necessária.

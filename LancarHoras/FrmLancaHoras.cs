@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace LancarHoras
 {
-    public partial class Form1 : Form
+    public partial class FrmLancaHoras : Form
     {
-        public Form1()
+        public FrmLancaHoras()
         {
             InitializeComponent();
             MontaGridFilial();
