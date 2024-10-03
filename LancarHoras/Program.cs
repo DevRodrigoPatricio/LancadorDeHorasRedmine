@@ -2,8 +2,10 @@
 using LancarHoras.Repository.EntityFrameworkConfig;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -33,9 +35,8 @@ namespace LancarHoras
                 //if (frmConexao.isSair()) return;
             }
 
-            if (Globals.tipoConfigBD == Enums.TipoConfigBD.UnicoBanco)
+            if (Globals.tipoConfigBD == Enums.TipoConfigBD.Definido)
             {
-
                 if (!Utils.verificarSeExisteGSsql())
                 {
                     FrmConexao frmConexao = new FrmConexao();
@@ -48,7 +49,6 @@ namespace LancarHoras
                 var strConexaoAux = Utils.RetornaArquivoGS(true);
                 if (strConexaoAux != null && !strConexaoAux.Equals(""))
                     Globals.strConexaoEntityFramework = Utils.RetornaArquivoGS(true) + endStringConexao;
-
             }
 
             try
@@ -57,27 +57,16 @@ namespace LancarHoras
             }
             catch (Exception ex)
             {
-                var caminho = Utils.criarEstruturaDePastas(Globals.pathLocal, "Fails");
-                Utils.salvarLogException(caminho,
-                    string.Format("{0}_{1}.{2}", "LogFail", DateTime.Now.ToString("yyyyMMddHHmmss"), "log"),
-                    ex, "Program", "");
                 MessageBox.Show("Aconteceu um erro inesperado. \nInforme: " + ex.Message,
-                    "Integrador Group Shopping", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Lançador de horas Redmine", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private static void verificarTipoBD()
         {
-
-            if (File.Exists(Path.Combine(Globals.pathLocal, Globals.NOME_ARQ_MULTIBD)))
+            if (File.Exists(Path.Combine(Globals.pathLocal, Globals.NOME_ARQ_DEFINIDO)))
             {
-                Globals.tipoConfigBD = Enums.TipoConfigBD.MultiBanco;
-                return;
-            }
-            //senão verificar se existe um Gssql.gs
-            if (File.Exists(Path.Combine(Globals.pathLocal, Globals.NOME_ARQ_UNICOBD)))
-            {
-                Globals.tipoConfigBD = Enums.TipoConfigBD.UnicoBanco;
+                Globals.tipoConfigBD = Enums.TipoConfigBD.Definido;
                 return;
             }
             Globals.tipoConfigBD = Enums.TipoConfigBD.NaoDefinido;
@@ -102,7 +91,8 @@ namespace LancarHoras
         private static bool verificarSeAppEstaExec()
         {
             int quant = 0;
-            string nomeAplicacao = "IntegradorGShop.Ui.Integrador";
+            //ALTERAR O NOME
+            string nomeAplicacao = "LancadorHoras.Redmine";
             var processos = Process.GetProcesses();
             foreach (var processo in processos)
             {
@@ -111,27 +101,14 @@ namespace LancarHoras
                     quant++;
                     if (quant > 1)
                     {
-                        MessageBox.Show("O Integrador Group Shopping está aberto! \n" +
-                        "Aperte Alt + Tab ou verifique se está oculto próximo ao relógio.", "Integrador Group Shopping",
+                        MessageBox.Show("O programa está aberto! \n" +
+                        "Aperte Alt + Tab ou verifique se está oculto próximo ao relógio.", "Lançador de horas Redmine",
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return true;
                     }
                 }
             }
             return false;
-        }
-
-        public static string criarEstruturaDePastas(string pathBase, params string[] pastas)
-        {
-            var pathAux = pathBase;
-            var pastasAux = pastas.ToList().Where(p => p != null).ToList();
-            foreach (var pasta in pastasAux)
-            {
-                pathAux = Path.Combine(pathAux, pasta);
-                if (!Directory.Exists(pathAux))
-                    Directory.CreateDirectory(pathAux);
-            }
-            return pathAux;
         }
     }
 }

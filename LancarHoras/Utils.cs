@@ -12,7 +12,7 @@ namespace LancarHoras
     {
         private Utils()
         {
-       
+
         }
 
         public static bool verificarSeExisteGSsql()
@@ -96,6 +96,86 @@ namespace LancarHoras
                 throw;
             }
         }
+
+        public static string criarEstruturaDePastas(string pathBase, params string[] pastas)
+        {
+            var pathAux = pathBase;
+            var pastasAux = pastas.ToList().Where(p => p != null).ToList();
+            foreach (var pasta in pastasAux)
+            {
+                pathAux = Path.Combine(pathAux, pasta);
+                if (!Directory.Exists(pathAux))
+                    Directory.CreateDirectory(pathAux);
+            }
+            return pathAux;
+        }
+
+        public static void salvarArquivoTexto(string texto, string caminhoNomeExtensao, bool encodingDefault = false)
+        {
+            List<string> textoAux = new List<string>();
+            textoAux.Add(texto);
+            salvarArquivoTexto(textoAux, caminhoNomeExtensao, encodingDefault);
+        }
+
+
+        public static void salvarArquivoTexto(List<string> texto, string caminhoNomeExtensao, bool encodingDefault = false)
+        {
+            string arqAux = caminhoNomeExtensao;
+            int numArqRepetido = 0;
+            while (true)
+            {
+                if (File.Exists(arqAux))
+                {
+                    numArqRepetido++;
+                    string[] arqQuebrado = caminhoNomeExtensao.Split('.');
+                    arqAux = arqQuebrado[0] + "_" + numArqRepetido + "." + arqQuebrado[1];
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            FileStream fs = new FileStream(arqAux, FileMode.Append);
+            StreamWriter sw = new StreamWriter(fs, (encodingDefault ? Encoding.Default : Encoding.UTF8));
+
+            texto.ForEach(sw.WriteLine);
+            sw.Flush();
+            sw.Close();
+            fs.Close();
+        }
+
+
+
+        public static string CriptografarSimples(string texto, int valoraux)
+        {
+            try
+            {
+                string resultFinal = "";
+                string chave = "SEGURANCA".ToLower();
+                int chaveNum = 0;
+                char result;
+
+                for (int i = 0; i <= texto.Length - 1; i++)
+                {
+                    result = Convert.ToChar(Convert.ToChar(texto.Substring(i, 1)) + Convert.ToChar(chave.Substring(chaveNum, 1)) + valoraux);
+
+                    resultFinal = resultFinal + Encoding.Default.GetChars(new byte[] { Convert.ToByte(result) })[0];
+                    chaveNum = chaveNum + 1;
+
+                    if (chaveNum >= chave.Length)
+                    {
+                        chaveNum = 0;
+                    }
+                }
+                return resultFinal;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
 
     }
 }

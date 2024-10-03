@@ -11,8 +11,12 @@ namespace LancarHoras
         public enum TipoConfigBD
         {
             NaoDefinido,
-            UnicoBanco,
-            MultiBanco
+            Definido,
+        }
+        public enum TipoIntegracao
+        {
+            Manual,
+            Automatica,
         }
     }
 }

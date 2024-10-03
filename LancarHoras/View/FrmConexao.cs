@@ -1,5 +1,6 @@
-﻿using IntegradorGShop.Ui.Integrador.Controller;
-using IntegradorGShop.Utility;
+﻿using LancarHoras;
+using LancarHoras.Controller;
+using LancarHoras.Repository.EntityFrameworkConfig;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,7 @@ namespace IntegradorGShop.Ui.Integrador.View
         private string _nomeArqConexao = "GSsql.gs";
         private string _pathSaveArqGs = Globals.pathLocal;
         private string _tituloTela = "Conexão ao Banco de dados - {0}";
-        private string _banco = "GShop";
+        private string _banco = "Redmine";
         private string _login = "gshop_login";
         private string _senha = "gshop_senha";
         
@@ -40,7 +41,7 @@ namespace IntegradorGShop.Ui.Integrador.View
             _senha = senha;
         }
 
-        public FrmConexao(string nomeArqConexao, string path, string sistema = "Group Shopping")
+        public FrmConexao(string nomeArqConexao, string path, string sistema = "Lançador Redmine")
             : this()
         {
             _nomeArqConexao = nomeArqConexao;
