@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using LancarHoras.Domain.Interface;
+using System;
 using Unity;
+using Unity.Lifetime;
 
 namespace LancarHoras.Repository
 {
@@ -13,8 +11,8 @@ namespace LancarHoras.Repository
         {
             try
             {
-//                container.RegisterType(typeof(IRepositoryBase<>), typeof(RepositoryBase<>), new TransientLifetimeManager());
-
+                container.RegisterType(typeof(IRepositoryBase<>), typeof(RepositoryBase<>), new TransientLifetimeManager());
+                container.RegisterType<IHorasTrabalhadasRepository, HorasTrabalhadasRepository>();
             }
             catch (Exception ex)
             {

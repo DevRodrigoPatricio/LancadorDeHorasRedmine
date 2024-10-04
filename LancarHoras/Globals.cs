@@ -17,7 +17,7 @@ namespace LancarHoras.Repository.EntityFrameworkConfig
         public static string pathLocal { get; set; }
         public static Enums.TipoIntegracao tipoIntegracao { get; set; }
         public static string versao { get; set; }
-        public const string NOME_ARQ_DEFINIDO = "";
+        public const string NOME_ARQ_DEFINIDO = "GSsql.gs";
         public static Enums.TipoConfigBD tipoConfigBD { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LancarHoras.Domain;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace LancarHoras.Repository.EntityFrameworkConfig
         {
             base.Database.CommandTimeout = 20000;
         }
+
+        public virtual DbSet<HorasTrabalhadas> HorasTrabalhadas { get; set; }
     }
 }

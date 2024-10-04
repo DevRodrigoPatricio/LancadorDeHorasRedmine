@@ -1,4 +1,6 @@
 ﻿using LancarHoras.Controller;
+using LancarHoras.Domain;
+using LancarHoras.Domain.Interface;
 using LancarHoras.Repository;
 using LancarHoras.Repository.EntityFrameworkConfig;
 using System;
@@ -18,17 +20,15 @@ namespace LancarHoras
     public partial class FrmMain : Form
     {
         private UnityContainer _container;
-        //private MonitorDeServicosController _monitorServController;
+        private LancamentoHorasController lancamentoHorasController;
 
         public FrmMain()
         {
-            InitializeComponent();
-            MontaGridFilial();
-            CarregarDadosDoBanco();
+            InitializeComponent(); ;
             dgvHoras.CellValidating += dgvHoras_CellValidating;
         }
 
-        private void MontaGridFilial()
+        private void MontaGridHoras()
         {
             dgvHoras.Rows.Clear();
             dgvHoras.ColumnCount = 6;
@@ -63,7 +63,7 @@ namespace LancarHoras
 
             dgvHoras.Columns[5].HeaderText = "Comentário";
             dgvHoras.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dgvHoras.Columns[5].Width = 267;
+            dgvHoras.Columns[5].Width = 297;
 
             DataGridViewComboBoxColumn statusColumn = new DataGridViewComboBoxColumn();
             statusColumn.HeaderText = "Atividade";
@@ -121,8 +121,9 @@ namespace LancarHoras
         private void FrmMain_Load(object sender, EventArgs e)
         {
             this.Text += " - Versão: " + Globals.versao;
-
             inicializaDependencias();
+            MontaGridHoras();
+            CarregarDadosDoBanco();
             if (Globals.tipoConfigBD == Enums.TipoConfigBD.Definido)
                 if (!validarStrConexao())
                 {
@@ -136,7 +137,7 @@ namespace LancarHoras
         {
             _container = new UnityContainer();
             RepositoryInstaller.Install(_container);
-            //_monitorServController = _container.Resolve<MonitorDeServicosController>();
+            lancamentoHorasController = _container.Resolve<LancamentoHorasController>();
         }
 
 
@@ -145,12 +146,6 @@ namespace LancarHoras
             try
             {
                 ConexaoController conexaoController;
-                //txtServidor.Text = "";
-                //txtBanco.Text = "";
-                //txtServidorFin.Text = "";
-                //txtBancoFin.Text = "";
-
-                //preencherCamposAbaBancoDeDados(Globals.strConexaoEntityFramework, txtServidor, txtBanco);
                 conexaoController = new ConexaoController();
                 return conexaoController.testarConexao(Globals.strConexaoEntityFramework);
             }
@@ -160,24 +155,7 @@ namespace LancarHoras
             }
         }
 
-        private void preencherCamposAbaBancoDeDados(string strConexao, TextBox txtServ, TextBox txtBanc)
-        {
-            if (strConexao == null || strConexao.Equals(""))
-                return;
 
-            var dados = strConexao.Split(';');
-            foreach (var item in dados)
-            {
-                if (item.ToUpper().Contains("Data Source".ToUpper()))
-                {
-                    txtServ.Text = item.Split('=')[1];
-                }
-                else if (item.ToUpper().Contains("Initial Catalog".ToUpper()))
-                {
-                    txtBanc.Text = item.Split('=')[1];
-                }
-            }
-        }
 
 
         // FAZER TRATAMENTO DE ERRO
@@ -246,6 +224,8 @@ namespace LancarHoras
                             return;
                         }
 
+
+
                         DateTime data = DateTime.Parse(row.Cells[0].Value.ToString());
                         string tarefa = row.Cells[1].Value.ToString();
                         TimeSpan horarioInicial = TimeSpan.Parse(row.Cells[2].Value.ToString());
@@ -300,39 +280,29 @@ namespace LancarHoras
 
         private void CarregarDadosDoBanco()
         {
-            string connectionString = Globals.strConexaoEntityFramework;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                try
+                List<HorasTrabalhadas> horasLancadas = lancamentoHorasController.getHorasLancadas();
+                foreach (HorasTrabalhadas horas in horasLancadas)
                 {
-                    connection.Open();
-                    string query = "SELECT ID, Data, Tarefa, HorarioInicial, HorarioFinal, Duracao, Comentario, Atividade FROM HorasTrabalhadas";
-
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        SqlDataReader reader = command.ExecuteReader();
-
-                        while (reader.Read())
-                        {
-                            dgvHoras.Rows.Add(
-                                Convert.ToDateTime(reader["Data"]).ToString("dd/MM/yyyy"),
-                                reader["Tarefa"].ToString(),
-                                TimeSpan.Parse(reader["HorarioInicial"].ToString()).ToString(@"hh\:mm"),
-                                TimeSpan.Parse(reader["HorarioFinal"].ToString()).ToString(@"hh\:mm"),
-                                TimeSpan.Parse(reader["Duracao"].ToString()).ToString(@"hh\:mm"),
-                                reader["Comentario"].ToString(),
-                                reader["Atividade"].ToString(),
-                                reader["ID"].ToString()
-                            );
-                        }
-                    }
+                    dgvHoras.Rows.Add(
+                       horas.Data.ToString("dd/MM/yyyy"),
+                        horas.Tarefa.ToString(),
+                        horas.HorarioInicial.ToString(@"hh\:mm"),
+                        horas.HorarioFinal.ToString(@"hh\:mm"),
+                        horas.Duracao.ToString(@"hh\:mm"),
+                        horas.Comentario.ToString(),
+                        horas.Atividade.ToString(),
+                       horas.Id.ToString()
+                    );
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao carregar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
+
 }
+
