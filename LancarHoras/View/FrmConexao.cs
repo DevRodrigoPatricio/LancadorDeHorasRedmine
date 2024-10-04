@@ -153,6 +153,8 @@ namespace IntegradorGShop.Ui.Integrador.View
 
                 Utils.salvarArquivoTexto(stringConexaoEntity, Path.Combine(_pathSaveArqGs, _nomeArqConexao), true);
 
+                Globals.tipoConfigBD = Enums.TipoConfigBD.Definido;
+
                 this.Close();
             }
         }

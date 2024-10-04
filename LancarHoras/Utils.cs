@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace LancarHoras
 {
@@ -96,6 +98,47 @@ namespace LancarHoras
                 throw;
             }
         }
+
+        public static DialogResult MensagemAlerta(string mensagem, Enums.TituloAlerta tituloAlerta, Enums.BotaoAlerta botaoAlerta, Enums.IconeAlerta iconeAlerta) //#107504
+        {
+            string _titulo = Utils.getNameEnum<Enums.TituloAlerta>(tituloAlerta);
+
+            return MessageBox.Show(mensagem, _titulo, (MessageBoxButtons)botaoAlerta, (MessageBoxIcon)iconeAlerta);
+        }
+
+        public static DialogResult MensagemAlerta(string mensagem, Enums.TituloAlerta tituloAlerta) //#107504
+        {
+            DialogResult dialogResult;
+            string _titulo = Utils.getNameEnum<Enums.TituloAlerta>(tituloAlerta); //Retorna a descrição do enum (annotation "Display")
+
+            switch (tituloAlerta)
+            {
+                case Enums.TituloAlerta.AVISO:
+                    dialogResult = MessageBox.Show(mensagem, _titulo, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    break;
+                case Enums.TituloAlerta.CONFIRM:
+                    dialogResult = MessageBox.Show(mensagem, _titulo, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    break;
+                case Enums.TituloAlerta.INCONSIS:
+                    dialogResult = MessageBox.Show(mensagem, _titulo, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    break;
+                default:
+                    dialogResult = MessageBox.Show(mensagem, _titulo, MessageBoxButtons.OK, MessageBoxIcon.None);
+                    break;
+            }
+
+            return dialogResult;
+        }
+
+        public static string getNameEnum<T>(T value)
+        {
+            var type = value.GetType();
+            var fieldName = Enum.GetName(type, value);
+            var objs = type.GetField(fieldName).GetCustomAttributes(typeof(DisplayAttribute), false);
+
+            return objs.Length > 0 ? ((DisplayAttribute)objs[0]).Name : value.ToString();
+        }
+
 
         public static string criarEstruturaDePastas(string pathBase, params string[] pastas)
         {
