@@ -1,5 +1,5 @@
-﻿using IntegradorGShop.Ui.Integrador.View;
-using LancarHoras.Repository.EntityFrameworkConfig;
+﻿using LancarHoras.Repository.EntityFrameworkConfig;
+using LancarHoras.Ui.Integrador.View;
 using System;
 using System.Data.Entity;
 using System.Diagnostics;

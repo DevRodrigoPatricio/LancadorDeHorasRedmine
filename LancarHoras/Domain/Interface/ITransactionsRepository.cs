@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace LancarHoras.Domain.Interface
 {
-    public interface IHorasTrabalhadasRepository :IRepositoryBase<HorasTrabalhadas>
+    public interface ITransactionsRepository
     {
-        List<HorasTrabalhadas> getHorasPorData(DateTime data);
+        void BeginTransaction();
+
+        void CommitTransaction();
+
+        void RollbackTransaction();
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace IntegradorGShop.Ui.Integrador.View
+﻿namespace LancarHoras.Ui.Integrador.View
 {
     partial class FrmConexao
     {

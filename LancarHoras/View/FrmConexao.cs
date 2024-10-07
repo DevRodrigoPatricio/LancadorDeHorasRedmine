@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace IntegradorGShop.Ui.Integrador.View
+namespace LancarHoras.Ui.Integrador.View
 {
     public partial class FrmConexao : Form
     {
@@ -25,8 +25,7 @@ namespace IntegradorGShop.Ui.Integrador.View
         private string _pathSaveArqGs = Globals.pathLocal;
         private string _tituloTela = "Conexão ao Banco de dados - {0}";
         private string _banco = "Redmine";
-        private string _login = "gshop_login";
-        private string _senha = "gshop_senha";
+
         
 
         public FrmConexao()
@@ -37,8 +36,7 @@ namespace IntegradorGShop.Ui.Integrador.View
         public void setDadosLogin(string banco, string login, string senha)
         {
             _banco = banco;
-            _login = login;
-            _senha = senha;
+ 
         }
 
         public FrmConexao(string nomeArqConexao, string path, string sistema = "Lançador Redmine")
@@ -80,8 +78,7 @@ namespace IntegradorGShop.Ui.Integrador.View
             conexaoValidada(false);
             _conexaoController = new ConexaoController();
             txtBanco.Text = _banco;
-            txtLogin.Text = _login;
-            txtSenha.Text = _senha;
+   
         }
 
         public bool isConexaoValidada()

@@ -13,6 +13,8 @@ namespace LancarHoras.Repository
             {
                 container.RegisterType(typeof(IRepositoryBase<>), typeof(RepositoryBase<>), new TransientLifetimeManager());
                 container.RegisterType<IHorasTrabalhadasRepository, HorasTrabalhadasRepository>();
+                container.RegisterType<IConfigRepository, ConfigRepository>();
+                container.RegisterType<ITransactionsRepository, TransactionsRepository>();
             }
             catch (Exception ex)
             {

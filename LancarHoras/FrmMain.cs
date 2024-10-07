@@ -1,10 +1,12 @@
 ﻿using LancarHoras.Controller;
 using LancarHoras.Domain;
+using LancarHoras.Domain.Entities;
 using LancarHoras.Repository;
 using LancarHoras.Repository.EntityFrameworkConfig;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Windows.Forms;
 using Unity;
 
@@ -115,8 +117,9 @@ namespace LancarHoras
         {
             this.Text += " - Versão: " + Globals.versao;
             inicializaDependencias();
-            MontaGridHoras();
+            txtData.Text = DateTime.Now.ToString("dd/MM/yyyy");
             CarregarDadosDoBanco();
+           
             if (Globals.tipoConfigBD == Enums.TipoConfigBD.Definido)
                 if (!validarStrConexao())
                 {
@@ -183,15 +186,22 @@ namespace LancarHoras
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnLancar_Click(object sender, EventArgs e)
         {
+            List<HorasTrabalhadas> horasLancadas = lancamentoHorasController.gethorasPorData(Convert.ToDateTime(txtData.Text));
+            foreach(HorasTrabalhadas horalancada in horasLancadas)
+            {
+
+            }
 
         }
 
-        private void salvar_Click(object sender, EventArgs e)
+        private void btnSalvar_Click(object sender, EventArgs e)
         {
             try
             {
+
+
                 foreach (DataGridViewRow row in dgvHoras.Rows)
                 {
                     if (row.IsNewRow) continue;
@@ -218,6 +228,7 @@ namespace LancarHoras
                     hora.Duracao = TimeSpan.Parse(row.Cells[4].Value.ToString());
                     hora.Comentario = row.Cells[5].Value.ToString();
                     hora.Atividade = row.Cells["Atividade"].Value.ToString();
+                    hora.Situacao = "INCLUIDO";
 
                     string idValue = row.Cells["ID"].Value?.ToString();
                     int? id = !string.IsNullOrEmpty(idValue) ? (int?)Convert.ToInt32(idValue) : null;
@@ -235,24 +246,31 @@ namespace LancarHoras
                     }
 
                 }
+                Config configuracoes = new Config();
+                configuracoes.chaveKey = txtChavekey.Text;
+                configuracoes.url = txtUrl.Text;
+                lancamentoHorasController.saveConfig(configuracoes);
 
                 MessageBox.Show("Dados salvos com sucesso!", "Confirmação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btnLancar.Enabled = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao salvar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+            CarregarDadosDoBanco();
         }
 
         private void CarregarDadosDoBanco()
         {
             try
             {
-                List<HorasTrabalhadas> horasLancadas = lancamentoHorasController.getHorasLancadas();
+                MontaGridHoras();
+                List<HorasTrabalhadas> horasLancadas = lancamentoHorasController.gethorasPorData(Convert.ToDateTime(txtData.Text));
                 foreach (HorasTrabalhadas horas in horasLancadas)
                 {
-                    dgvHoras.Rows.Add(
+                    int rowIndex = dgvHoras.Rows.Add(
                        horas.Data.ToString("dd/MM/yyyy"),
                         horas.Tarefa.ToString(),
                         horas.HorarioInicial.ToString(@"hh\:mm"),
@@ -262,12 +280,38 @@ namespace LancarHoras
                         horas.Atividade.ToString(),
                        horas.Id.ToString()
                     );
+                    if(horas.Situacao == "INCLUIDO")
+                    {
+                        dgvHoras.Rows[rowIndex].DefaultCellStyle.BackColor = Color.GreenYellow;
+                    }
                 }
+                Config config = lancamentoHorasController.GetConfig();
+                txtUrl.Text = config.url;
+                txtChavekey.Text = config.chaveKey;
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao carregar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void dtpVendasDe_ValueChanged(object sender, EventArgs e)
+        {
+            txtData.Text = dtpVendasDe.Value.ToString("dd/MM/yyyy");
+            CarregarDadosDoBanco();
+
+
+        }
+
+        private void txtDtVendasDe_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 

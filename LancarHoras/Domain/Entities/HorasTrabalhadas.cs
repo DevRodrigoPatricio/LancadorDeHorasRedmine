@@ -21,5 +21,6 @@ namespace LancarHoras.Domain
         public TimeSpan Duracao { get; set; }
         public string Comentario { get; set; }
         public string Atividade { get; set; }
+        public string Situacao { get; set; }
     }
 }
