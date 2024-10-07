@@ -1,4 +1,5 @@
 ﻿using LancarHoras.Domain;
+using LancarHoras.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -16,5 +17,6 @@ namespace LancarHoras.Repository.EntityFrameworkConfig
         }
 
         public virtual DbSet<HorasTrabalhadas> HorasTrabalhadas { get; set; }
+        public virtual DbSet<Config> Config { get; set; }
     }
 }

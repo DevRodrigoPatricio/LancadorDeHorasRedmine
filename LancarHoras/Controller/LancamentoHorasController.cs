@@ -19,7 +19,40 @@ namespace LancarHoras.Controller
 
         public List<HorasTrabalhadas> getHorasLancadas()
         {
-            return horasTrabalhadasRepository.GetAll().ToList();
+            try
+            {
+                return horasTrabalhadasRepository.GetAll().ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex; 
+            }
+            
+        }
+
+        public void criarHoras(HorasTrabalhadas hora)
+        {
+            try
+            {
+                horasTrabalhadasRepository.Add(hora);
+            }catch(Exception ex)
+            {
+                throw ex;
+            }
+            
+        }
+
+        public void atualizaHoras(HorasTrabalhadas hora)
+        {
+            try
+            {
+                horasTrabalhadasRepository.Update(hora);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
     }

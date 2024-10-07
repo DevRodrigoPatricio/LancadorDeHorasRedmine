@@ -1,17 +1,10 @@
 ﻿using LancarHoras.Controller;
 using LancarHoras.Domain;
-using LancarHoras.Domain.Interface;
 using LancarHoras.Repository;
 using LancarHoras.Repository.EntityFrameworkConfig;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Unity;
 
@@ -155,10 +148,6 @@ namespace LancarHoras
             }
         }
 
-
-
-
-        // FAZER TRATAMENTO DE ERRO
         private void dgvHoras_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
             if (e.ColumnIndex == 0)
@@ -201,81 +190,59 @@ namespace LancarHoras
 
         private void salvar_Click(object sender, EventArgs e)
         {
-            string connectionString = Globals.strConexaoEntityFramework;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                try
+                foreach (DataGridViewRow row in dgvHoras.Rows)
                 {
-                    connection.Open();
-                    foreach (DataGridViewRow row in dgvHoras.Rows)
+                    if (row.IsNewRow) continue;
+
+                    if (row.Cells[0].Value == null || string.IsNullOrWhiteSpace(row.Cells[0].Value.ToString()) ||
+                        row.Cells[1].Value == null || string.IsNullOrWhiteSpace(row.Cells[1].Value.ToString()) ||
+                        row.Cells[2].Value == null || string.IsNullOrWhiteSpace(row.Cells[2].Value.ToString()) ||
+                        row.Cells[3].Value == null || string.IsNullOrWhiteSpace(row.Cells[3].Value.ToString()) ||
+                        row.Cells[4].Value == null || string.IsNullOrWhiteSpace(row.Cells[4].Value.ToString()) ||
+                        row.Cells[5].Value == null || string.IsNullOrWhiteSpace(row.Cells[5].Value.ToString()) ||
+                        row.Cells["Atividade"].Value == null || string.IsNullOrWhiteSpace(row.Cells["Atividade"].Value.ToString()))
                     {
-                        if (row.IsNewRow) continue;
-
-                        if (row.Cells[0].Value == null || string.IsNullOrWhiteSpace(row.Cells[0].Value.ToString()) ||
-                            row.Cells[1].Value == null || string.IsNullOrWhiteSpace(row.Cells[1].Value.ToString()) ||
-                            row.Cells[2].Value == null || string.IsNullOrWhiteSpace(row.Cells[2].Value.ToString()) ||
-                            row.Cells[3].Value == null || string.IsNullOrWhiteSpace(row.Cells[3].Value.ToString()) ||
-                            row.Cells[4].Value == null || string.IsNullOrWhiteSpace(row.Cells[4].Value.ToString()) ||
-                            row.Cells[5].Value == null || string.IsNullOrWhiteSpace(row.Cells[5].Value.ToString()) ||
-                            row.Cells["Atividade"].Value == null || string.IsNullOrWhiteSpace(row.Cells["Atividade"].Value.ToString()))
-                        {
-                            MessageBox.Show("Preencha todos os campos antes de salvar.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-
-
-                        DateTime data = DateTime.Parse(row.Cells[0].Value.ToString());
-                        string tarefa = row.Cells[1].Value.ToString();
-                        TimeSpan horarioInicial = TimeSpan.Parse(row.Cells[2].Value.ToString());
-                        TimeSpan horarioFinal = TimeSpan.Parse(row.Cells[3].Value.ToString());
-                        TimeSpan duracao = TimeSpan.Parse(row.Cells[4].Value.ToString());
-                        string comentario = row.Cells[5].Value.ToString();
-                        string atividade = row.Cells["Atividade"].Value.ToString();
-
-                        string idValue = row.Cells["ID"].Value?.ToString();
-                        int? id = !string.IsNullOrEmpty(idValue) ? (int?)Convert.ToInt32(idValue) : null;
-
-                        string query;
-                        if (id.HasValue)
-                        {
-                            query = "UPDATE HorasTrabalhadas SET Data = @Data, Tarefa = @Tarefa, HorarioInicial = @HorarioInicial, " +
-                                    "HorarioFinal = @HorarioFinal, Duracao = @Duracao, Comentario = @Comentario, Atividade = @Atividade " +
-                                    "WHERE ID = @ID";
-                        }
-                        else
-                        {
-                            query = "INSERT INTO HorasTrabalhadas (Data, Tarefa, HorarioInicial, HorarioFinal, Duracao, Comentario, Atividade) " +
-                                    "VALUES (@Data, @Tarefa, @HorarioInicial, @HorarioFinal, @Duracao, @Comentario, @Atividade)";
-                        }
-
-                        using (SqlCommand command = new SqlCommand(query, connection))
-                        {
-                            command.Parameters.AddWithValue("@Data", data);
-                            command.Parameters.AddWithValue("@Tarefa", tarefa);
-                            command.Parameters.AddWithValue("@HorarioInicial", horarioInicial);
-                            command.Parameters.AddWithValue("@HorarioFinal", horarioFinal);
-                            command.Parameters.AddWithValue("@Duracao", duracao);
-                            command.Parameters.AddWithValue("@Comentario", comentario);
-                            command.Parameters.AddWithValue("@Atividade", atividade);
-
-                            if (id.HasValue)
-                            {
-                                command.Parameters.AddWithValue("@ID", id.Value);
-                            }
-
-                            command.ExecuteNonQuery();
-                        }
+                        MessageBox.Show("Preencha todos os campos antes de salvar.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
                     }
 
-                    MessageBox.Show("Dados salvos com sucesso!", "Confirmação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    HorasTrabalhadas hora = new HorasTrabalhadas();
+
+
+                    hora.Data = DateTime.Parse(row.Cells[0].Value.ToString());
+                    hora.Tarefa = row.Cells[1].Value.ToString();
+                    hora.HorarioInicial = TimeSpan.Parse(row.Cells[2].Value.ToString());
+                    hora.HorarioFinal = TimeSpan.Parse(row.Cells[3].Value.ToString());
+                    hora.Duracao = TimeSpan.Parse(row.Cells[4].Value.ToString());
+                    hora.Comentario = row.Cells[5].Value.ToString();
+                    hora.Atividade = row.Cells["Atividade"].Value.ToString();
+
+                    string idValue = row.Cells["ID"].Value?.ToString();
+                    int? id = !string.IsNullOrEmpty(idValue) ? (int?)Convert.ToInt32(idValue) : null;
+
+
+                    string query;
+                    if (id.HasValue)
+                    {
+                        hora.Id = (int)id;
+                        lancamentoHorasController.atualizaHoras(hora);
+                    }
+                    else
+                    {
+                        lancamentoHorasController.criarHoras(hora);
+                    }
+
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Erro ao salvar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+
+                MessageBox.Show("Dados salvos com sucesso!", "Confirmação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao salvar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
         }
 
         private void CarregarDadosDoBanco()

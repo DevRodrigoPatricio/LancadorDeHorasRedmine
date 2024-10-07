@@ -1,10 +1,9 @@
 ﻿using IntegradorGShop.Ui.Integrador.View;
 using LancarHoras.Repository.EntityFrameworkConfig;
 using System;
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -20,6 +19,7 @@ namespace LancarHoras
         static void Main()
         {
             iniciarVariaveisGlobais();
+
             if (verificarSeAppEstaExec()) return;
 
             Application.EnableVisualStyles();
@@ -60,7 +60,11 @@ namespace LancarHoras
                 MessageBox.Show("Aconteceu um erro inesperado. \nInforme: " + ex.Message,
                     "Lançador de horas Redmine", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+
         }
+
+
 
         private static void verificarTipoBD()
         {
