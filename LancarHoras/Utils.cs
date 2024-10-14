@@ -219,6 +219,33 @@ namespace LancarHoras
             }
         }
 
+        public static class ActivityMapper
+        {
+            private static readonly Dictionary<string, int> activityMap = new Dictionary<string, int>
+            {
+                { "Análise", 16},
+                { "Desenvolvimento", 9 },
+                { "Design", 8 },
+                { "Revisão por pares", 10 },
+                { "Reunião", 12 },
+                { "Teste", 14 },
+                { "Apoio", 678 },
+                { "Outros", 13 }
+            };
+
+            public static int GetActivityId(string activityName)
+            {
+                if (activityMap.TryGetValue(activityName, out int activityId))
+                {
+                    return activityId;
+                }
+                else
+                {
+                    throw new ArgumentException("Atividade não encontrada");
+                }
+            }
+        }
+
 
     }
 }

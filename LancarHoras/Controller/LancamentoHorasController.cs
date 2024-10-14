@@ -1,11 +1,14 @@
 ﻿using LancarHoras.Domain;
 using LancarHoras.Domain.Entities;
 using LancarHoras.Domain.Interface;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using static LancarHoras.Utils;
 
 namespace LancarHoras.Controller
 {
@@ -120,6 +123,41 @@ namespace LancarHoras.Controller
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public async Task LancarHorasNaAPI(HorasTrabalhadas horasTrabalhadas)
+        {
+            var config = GetConfig();
+            var url = $"{config.url}/time_entries.json";
+            var id_atividade = ActivityMapper.GetActivityId(horasTrabalhadas.Atividade);
+
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Add("X-Redmine-API-Key", config.chaveKey);
+
+                var requestData = new
+                {
+                    time_entry = new
+                    {
+                        issue_id = horasTrabalhadas.Tarefa,
+                        spent_on = horasTrabalhadas.Data.ToString("yyyy-MM-dd"),
+                        hours = horasTrabalhadas.Duracao.ToString(@"hh\:mm"),
+                        activity_id = id_atividade,
+                        comments = horasTrabalhadas.Comentario
+                    }
+                };
+
+                var jsonContent = JsonConvert.SerializeObject(requestData);
+                var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(url, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Erro ao lançar horas: {responseContent}");
+                }
             }
         }
 

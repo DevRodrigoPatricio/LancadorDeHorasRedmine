@@ -186,14 +186,22 @@ namespace LancarHoras
             }
         }
 
-        private void btnLancar_Click(object sender, EventArgs e)
+        private async void btnLancar_Click(object sender, EventArgs e)
         {
-            List<HorasTrabalhadas> horasLancadas = lancamentoHorasController.gethorasPorData(Convert.ToDateTime(txtData.Text));
-            foreach(HorasTrabalhadas horalancada in horasLancadas)
+            try
             {
+                List<HorasTrabalhadas> horasLancadas = lancamentoHorasController.gethorasPorData(Convert.ToDateTime(txtData.Text));
+                foreach (HorasTrabalhadas horaLancada in horasLancadas)
+                {
+                    await lancamentoHorasController.LancarHorasNaAPI(horaLancada);
+                }
 
+                MessageBox.Show("Horas lançadas com sucesso!");
             }
-
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao lançar horas: {ex.Message}");
+            }
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
