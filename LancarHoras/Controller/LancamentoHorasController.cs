@@ -126,6 +126,18 @@ namespace LancarHoras.Controller
             }
         }
 
+        public string getSituacaoById(int id)
+        {
+            try
+            {
+                return horasTrabalhadasRepository.getSituacaoById(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task LancarHorasNaAPI(HorasTrabalhadas horasTrabalhadas)
         {
             var config = GetConfig();
@@ -158,6 +170,9 @@ namespace LancarHoras.Controller
                     var responseContent = await response.Content.ReadAsStringAsync();
                     throw new Exception($"Erro ao lançar horas: {responseContent}");
                 }
+
+                horasTrabalhadas.Situacao = "LANCADO";
+                atualizaHoras(horasTrabalhadas);
             }
         }
 

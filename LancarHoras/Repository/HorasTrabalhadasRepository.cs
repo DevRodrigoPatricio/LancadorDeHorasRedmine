@@ -24,5 +24,23 @@ namespace LancarHoras.Repository
             }
 
         }
+
+        public string getSituacaoById(int id)
+        {
+            try
+            {
+                emTransacao();
+                var situacao = Context.Set<HorasTrabalhadas>()
+                                      .Where(h => h.Id == id)
+                                      .Select(h => h.Situacao)
+                                      .FirstOrDefault();
+
+                return situacao;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

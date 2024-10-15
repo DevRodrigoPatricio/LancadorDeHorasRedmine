@@ -9,5 +9,6 @@ namespace LancarHoras.Domain.Interface
     public interface IHorasTrabalhadasRepository :IRepositoryBase<HorasTrabalhadas>
     {
         List<HorasTrabalhadas> getHorasPorData(DateTime data);
+        string getSituacaoById(int id);
     }
 }

@@ -191,9 +191,12 @@ namespace LancarHoras
             try
             {
                 List<HorasTrabalhadas> horasLancadas = lancamentoHorasController.gethorasPorData(Convert.ToDateTime(txtData.Text));
+
                 foreach (HorasTrabalhadas horaLancada in horasLancadas)
                 {
-                    await lancamentoHorasController.LancarHorasNaAPI(horaLancada);
+                    if (horaLancada.Situacao == "INCLUIDO") {
+                        await lancamentoHorasController.LancarHorasNaAPI(horaLancada);
+                    }
                 }
 
                 MessageBox.Show("Horas lançadas com sucesso!");
@@ -202,6 +205,8 @@ namespace LancarHoras
             {
                 MessageBox.Show($"Erro ao lançar horas: {ex.Message}");
             }
+
+            CarregarDadosDoBanco();
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
@@ -236,20 +241,25 @@ namespace LancarHoras
                     hora.Duracao = TimeSpan.Parse(row.Cells[4].Value.ToString());
                     hora.Comentario = row.Cells[5].Value.ToString();
                     hora.Atividade = row.Cells["Atividade"].Value.ToString();
-                    hora.Situacao = "INCLUIDO";
 
                     string idValue = row.Cells["ID"].Value?.ToString();
                     int? id = !string.IsNullOrEmpty(idValue) ? (int?)Convert.ToInt32(idValue) : null;
 
-
-                    string query;
                     if (id.HasValue)
                     {
-                        hora.Id = (int)id;
-                        lancamentoHorasController.atualizaHoras(hora);
+                        if (lancamentoHorasController.getSituacaoById(id.Value) == "LANCADO")
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            hora.Id = (int)id;
+                            lancamentoHorasController.atualizaHoras(hora);
+                        }
                     }
                     else
                     {
+                        hora.Situacao = "INCLUIDO";
                         lancamentoHorasController.criarHoras(hora);
                     }
 
@@ -279,18 +289,23 @@ namespace LancarHoras
                 foreach (HorasTrabalhadas horas in horasLancadas)
                 {
                     int rowIndex = dgvHoras.Rows.Add(
-                       horas.Data.ToString("dd/MM/yyyy"),
+                        horas.Data.ToString("dd/MM/yyyy"),
                         horas.Tarefa.ToString(),
                         horas.HorarioInicial.ToString(@"hh\:mm"),
                         horas.HorarioFinal.ToString(@"hh\:mm"),
                         horas.Duracao.ToString(@"hh\:mm"),
                         horas.Comentario.ToString(),
                         horas.Atividade.ToString(),
-                       horas.Id.ToString()
+                        horas.Id.ToString()
                     );
-                    if(horas.Situacao == "INCLUIDO")
+                    if(horas.Situacao == "LANCADO")
                     {
                         dgvHoras.Rows[rowIndex].DefaultCellStyle.BackColor = Color.GreenYellow;
+                        dgvHoras.Rows[rowIndex].ReadOnly = true;
+                    }
+                    else
+                    {
+                        dgvHoras.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Blue;
                     }
                 }
                 Config config = lancamentoHorasController.GetConfig();
