@@ -300,12 +300,12 @@ namespace LancarHoras
                     );
                     if(horas.Situacao == "LANCADO")
                     {
-                        dgvHoras.Rows[rowIndex].DefaultCellStyle.BackColor = Color.GreenYellow;
+                        dgvHoras.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
                         dgvHoras.Rows[rowIndex].ReadOnly = true;
                     }
                     else
                     {
-                        dgvHoras.Rows[rowIndex].DefaultCellStyle.BackColor = Color.Blue;
+                        dgvHoras.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LightYellow;
                     }
                 }
                 Config config = lancamentoHorasController.GetConfig();
