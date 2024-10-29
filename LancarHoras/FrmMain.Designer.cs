@@ -29,6 +29,7 @@ namespace LancarHoras
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.dgvHoras = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.txtChavekey = new System.Windows.Forms.TextBox();
@@ -156,10 +157,9 @@ namespace LancarHoras
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dgvHoras);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "FrmMain";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Lançar Horas Redmine";
             this.Load += new System.EventHandler(this.FrmMain_Load);

@@ -224,7 +224,7 @@ namespace LancarHoras
                         row.Cells[2].Value == null || string.IsNullOrWhiteSpace(row.Cells[2].Value.ToString()) ||
                         row.Cells[3].Value == null || string.IsNullOrWhiteSpace(row.Cells[3].Value.ToString()) ||
                         row.Cells[4].Value == null || string.IsNullOrWhiteSpace(row.Cells[4].Value.ToString()) ||
-                        row.Cells[5].Value == null || string.IsNullOrWhiteSpace(row.Cells[5].Value.ToString()) ||
+                        //row.Cells[5].Value == null || string.IsNullOrWhiteSpace(row.Cells[5].Value.ToString()) ||
                         row.Cells["Atividade"].Value == null || string.IsNullOrWhiteSpace(row.Cells["Atividade"].Value.ToString()))
                     {
                         MessageBox.Show("Preencha todos os campos antes de salvar.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -239,7 +239,14 @@ namespace LancarHoras
                     hora.HorarioInicial = TimeSpan.Parse(row.Cells[2].Value.ToString());
                     hora.HorarioFinal = TimeSpan.Parse(row.Cells[3].Value.ToString());
                     hora.Duracao = TimeSpan.Parse(row.Cells[4].Value.ToString());
-                    hora.Comentario = row.Cells[5].Value.ToString();
+                    if (row.Cells[5].Value != null && !string.IsNullOrWhiteSpace(row.Cells[5].Value.ToString()))
+                    {
+                        hora.Comentario = row.Cells[5].Value.ToString();
+                    }
+                    else
+                    {
+                        hora.Comentario = "";
+                    }
                     hora.Atividade = row.Cells["Atividade"].Value.ToString();
 
                     string idValue = row.Cells["ID"].Value?.ToString();
@@ -271,13 +278,13 @@ namespace LancarHoras
 
                 MessageBox.Show("Dados salvos com sucesso!", "Confirmação", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnLancar.Enabled = true;
+
+                CarregarDadosDoBanco();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao salvar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            CarregarDadosDoBanco();
         }
 
         private void CarregarDadosDoBanco()
