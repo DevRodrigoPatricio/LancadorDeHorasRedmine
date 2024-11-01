@@ -194,27 +194,26 @@ namespace LancarHoras
 
                 foreach (HorasTrabalhadas horaLancada in horasLancadas)
                 {
-                    if (horaLancada.Situacao == "INCLUIDO") {
+                    if (horaLancada.Situacao == "INCLUIDO" || horaLancada.Situacao == "ATUALIZADO")
+                    {
                         await lancamentoHorasController.LancarHorasNaAPI(horaLancada);
                     }
                 }
 
                 MessageBox.Show("Horas lançadas com sucesso!");
+
+                CarregarDadosDoBanco();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Erro ao lançar horas: {ex.Message}");
             }
-
-            CarregarDadosDoBanco();
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
         {
             try
             {
-
-
                 foreach (DataGridViewRow row in dgvHoras.Rows)
                 {
                     if (row.IsNewRow) continue;
@@ -224,7 +223,6 @@ namespace LancarHoras
                         row.Cells[2].Value == null || string.IsNullOrWhiteSpace(row.Cells[2].Value.ToString()) ||
                         row.Cells[3].Value == null || string.IsNullOrWhiteSpace(row.Cells[3].Value.ToString()) ||
                         row.Cells[4].Value == null || string.IsNullOrWhiteSpace(row.Cells[4].Value.ToString()) ||
-                        //row.Cells[5].Value == null || string.IsNullOrWhiteSpace(row.Cells[5].Value.ToString()) ||
                         row.Cells["Atividade"].Value == null || string.IsNullOrWhiteSpace(row.Cells["Atividade"].Value.ToString()))
                     {
                         MessageBox.Show("Preencha todos os campos antes de salvar.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -233,24 +231,18 @@ namespace LancarHoras
 
                     HorasTrabalhadas hora = new HorasTrabalhadas();
 
-
                     hora.Data = DateTime.Parse(row.Cells[0].Value.ToString());
                     hora.Tarefa = row.Cells[1].Value.ToString();
                     hora.HorarioInicial = TimeSpan.Parse(row.Cells[2].Value.ToString());
                     hora.HorarioFinal = TimeSpan.Parse(row.Cells[3].Value.ToString());
                     hora.Duracao = TimeSpan.Parse(row.Cells[4].Value.ToString());
-                    if (row.Cells[5].Value != null && !string.IsNullOrWhiteSpace(row.Cells[5].Value.ToString()))
-                    {
-                        hora.Comentario = row.Cells[5].Value.ToString();
-                    }
-                    else
-                    {
-                        hora.Comentario = "";
-                    }
+                    hora.Comentario = row.Cells[5]?.Value?.ToString() ?? "";
                     hora.Atividade = row.Cells["Atividade"].Value.ToString();
 
                     string idValue = row.Cells["ID"].Value?.ToString();
                     int? id = !string.IsNullOrEmpty(idValue) ? (int?)Convert.ToInt32(idValue) : null;
+
+                    hora.Situacao = "INCLUIDO";
 
                     if (id.HasValue)
                     {
@@ -261,19 +253,21 @@ namespace LancarHoras
                         else
                         {
                             hora.Id = (int)id;
+                            hora.Situacao = "ATUALIZADO";
                             lancamentoHorasController.atualizaHoras(hora);
                         }
                     }
                     else
                     {
-                        hora.Situacao = "INCLUIDO";
                         lancamentoHorasController.criarHoras(hora);
                     }
-
                 }
-                Config configuracoes = new Config();
-                configuracoes.chaveKey = txtChavekey.Text;
-                configuracoes.url = txtUrl.Text;
+
+                Config configuracoes = new Config
+                {
+                    chaveKey = txtChavekey.Text,
+                    url = txtUrl.Text
+                };
                 lancamentoHorasController.saveConfig(configuracoes);
 
                 MessageBox.Show("Dados salvos com sucesso!", "Confirmação", MessageBoxButtons.OK, MessageBoxIcon.Information);
