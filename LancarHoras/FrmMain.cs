@@ -119,7 +119,7 @@ namespace LancarHoras
             inicializaDependencias();
             txtData.Text = DateTime.Now.ToString("dd/MM/yyyy");
             CarregarDadosDoBanco();
-           
+
             if (Globals.tipoConfigBD == Enums.TipoConfigBD.Definido)
                 if (!validarStrConexao())
                 {
@@ -299,7 +299,7 @@ namespace LancarHoras
                         horas.Atividade.ToString(),
                         horas.Id.ToString()
                     );
-                    if(horas.Situacao == "LANCADO")
+                    if (horas.Situacao == "LANCADO")
                     {
                         dgvHoras.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LightGreen;
                         dgvHoras.Rows[rowIndex].ReadOnly = true;
@@ -336,6 +336,51 @@ namespace LancarHoras
         private void label4_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnImportar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DialogResult result = MessageBox.Show("Atenção: A importação de dados poderá resultar em duplicações, "+
+                    "caso a planilha contenha registros que já foram cadastrados anteriormente no banco de dados.\n\n" +
+                    "Deseja continuar com a importação?",
+                    "Aviso", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Yes)
+                {
+                    string caminhoArquivo = "";
+
+                    using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                    {
+                        openFileDialog.InitialDirectory = "c:\\";
+                        openFileDialog.Filter = "Arquivos Excel (*.xlsx)|*.xlsx";
+                        openFileDialog.FilterIndex = 1;
+                        openFileDialog.RestoreDirectory = true;
+
+                        if (openFileDialog.ShowDialog() == DialogResult.OK)
+                        {
+                            caminhoArquivo = openFileDialog.FileName;
+                        }
+
+                    }
+                    List<HorasTrabalhadas> horasTrabalhadas = LerExcelController.LerHorasTrabalhadasDoExcel(caminhoArquivo);
+
+                    foreach (var horas in horasTrabalhadas)
+                    {
+                        if (horas.Tarefa != "" && horas.Tarefa != null)
+                        {
+                            lancamentoHorasController.criarHoras(horas);
+                        }
+                    }
+
+                    btnSalvar_Click(this, EventArgs.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao carregar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 

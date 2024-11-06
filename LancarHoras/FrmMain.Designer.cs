@@ -41,6 +41,7 @@ namespace LancarHoras
             this.txtData = new System.Windows.Forms.MaskedTextBox();
             this.dtpVendasDe = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
+            this.btnImportar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHoras)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,7 +50,7 @@ namespace LancarHoras
             this.dgvHoras.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvHoras.Location = new System.Drawing.Point(12, 76);
             this.dgvHoras.Name = "dgvHoras";
-            this.dgvHoras.Size = new System.Drawing.Size(766, 442);
+            this.dgvHoras.Size = new System.Drawing.Size(813, 442);
             this.dgvHoras.TabIndex = 0;
             // 
             // label1
@@ -69,7 +70,7 @@ namespace LancarHoras
             // btnLancar
             // 
             this.btnLancar.Enabled = false;
-            this.btnLancar.Location = new System.Drawing.Point(687, 45);
+            this.btnLancar.Location = new System.Drawing.Point(739, 45);
             this.btnLancar.Name = "btnLancar";
             this.btnLancar.Size = new System.Drawing.Size(89, 25);
             this.btnLancar.TabIndex = 3;
@@ -79,7 +80,7 @@ namespace LancarHoras
             // 
             // btnSalvar
             // 
-            this.btnSalvar.Location = new System.Drawing.Point(592, 45);
+            this.btnSalvar.Location = new System.Drawing.Point(644, 45);
             this.btnSalvar.Name = "btnSalvar";
             this.btnSalvar.Size = new System.Drawing.Size(89, 25);
             this.btnSalvar.TabIndex = 4;
@@ -115,7 +116,7 @@ namespace LancarHoras
             // txtData
             // 
             this.txtData.Enabled = false;
-            this.txtData.Location = new System.Drawing.Point(676, 20);
+            this.txtData.Location = new System.Drawing.Point(728, 20);
             this.txtData.Mask = "##/##/####";
             this.txtData.Name = "txtData";
             this.txtData.Size = new System.Drawing.Size(77, 20);
@@ -124,7 +125,7 @@ namespace LancarHoras
             // 
             // dtpVendasDe
             // 
-            this.dtpVendasDe.Location = new System.Drawing.Point(755, 20);
+            this.dtpVendasDe.Location = new System.Drawing.Point(807, 20);
             this.dtpVendasDe.Name = "dtpVendasDe";
             this.dtpVendasDe.Size = new System.Drawing.Size(18, 20);
             this.dtpVendasDe.TabIndex = 26;
@@ -133,18 +134,29 @@ namespace LancarHoras
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(561, 23);
+            this.label4.Location = new System.Drawing.Point(613, 23);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(109, 13);
             this.label4.TabIndex = 28;
             this.label4.Text = "Data de lançamento :";
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
+            // btnImportar
+            // 
+            this.btnImportar.Location = new System.Drawing.Point(549, 45);
+            this.btnImportar.Name = "btnImportar";
+            this.btnImportar.Size = new System.Drawing.Size(89, 25);
+            this.btnImportar.TabIndex = 29;
+            this.btnImportar.Text = "Importar";
+            this.btnImportar.UseVisualStyleBackColor = true;
+            this.btnImportar.Click += new System.EventHandler(this.btnImportar_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(785, 522);
+            this.ClientSize = new System.Drawing.Size(834, 522);
+            this.Controls.Add(this.btnImportar);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtData);
             this.Controls.Add(this.dtpVendasDe);
@@ -182,6 +194,7 @@ namespace LancarHoras
         private System.Windows.Forms.MaskedTextBox txtData;
         private System.Windows.Forms.DateTimePicker dtpVendasDe;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button btnImportar;
     }
 }
 
