@@ -30,52 +30,55 @@ namespace LancarHoras.Controller
 
                 for (int linha = linhaInicial; linha <= linhaFinal; linha++)
                 {
-                    var horasTrabalhadas = new HorasTrabalhadas();
-
-                    if (DateTime.TryParse(planilha.Cells[linha, 1].Text, out DateTime data))
+                    if (planilha.Cells[linha, 8].Text == "Pendente")
                     {
-                        horasTrabalhadas.Data = data;
-                    }
-                    else
-                    {
-                        horasTrabalhadas.Data = DateTime.MinValue; 
-                    }
+                        var horasTrabalhadas = new HorasTrabalhadas();
 
-                    horasTrabalhadas.Tarefa = planilha.Cells[linha, 2].Text;
+                        if (DateTime.TryParse(planilha.Cells[linha, 1].Text, out DateTime data))
+                        {
+                            horasTrabalhadas.Data = data;
+                        }
+                        else
+                        {
+                            horasTrabalhadas.Data = DateTime.MinValue;
+                        }
 
-                    if (TimeSpan.TryParse(planilha.Cells[linha, 3].Text, out TimeSpan horarioInicial))
-                    {
-                        horasTrabalhadas.HorarioInicial = horarioInicial;
-                    }
-                    else
-                    {
-                        horasTrabalhadas.HorarioInicial = TimeSpan.Zero;
-                    }
+                        horasTrabalhadas.Tarefa = planilha.Cells[linha, 2].Text.Replace("#", "");
 
-                    if (TimeSpan.TryParse(planilha.Cells[linha, 4].Text, out TimeSpan horarioFinal))
-                    {
-                        horasTrabalhadas.HorarioFinal = horarioFinal;
-                    }
-                    else
-                    {
-                        horasTrabalhadas.HorarioFinal = TimeSpan.Zero;
-                    }
+                        if (TimeSpan.TryParse(planilha.Cells[linha, 3].Text, out TimeSpan horarioInicial))
+                        {
+                            horasTrabalhadas.HorarioInicial = horarioInicial;
+                        }
+                        else
+                        {
+                            horasTrabalhadas.HorarioInicial = TimeSpan.Zero;
+                        }
 
-                    if (TimeSpan.TryParse(planilha.Cells[linha, 5].Text, out TimeSpan duracao))
-                    {
-                        horasTrabalhadas.Duracao = duracao;
+                        if (TimeSpan.TryParse(planilha.Cells[linha, 4].Text, out TimeSpan horarioFinal))
+                        {
+                            horasTrabalhadas.HorarioFinal = horarioFinal;
+                        }
+                        else
+                        {
+                            horasTrabalhadas.HorarioFinal = TimeSpan.Zero;
+                        }
+
+                        if (TimeSpan.TryParse(planilha.Cells[linha, 5].Text, out TimeSpan duracao))
+                        {
+                            horasTrabalhadas.Duracao = duracao;
+                        }
+                        else
+                        {
+                            horasTrabalhadas.Duracao = TimeSpan.Zero;
+                        }
+
+                        horasTrabalhadas.Atividade = planilha.Cells[linha, 6].Text;
+                        horasTrabalhadas.Comentario = planilha.Cells[linha, 7].Text;
+
+                        horasTrabalhadas.Situacao = "ATUALIZADO";
+
+                        listaHorasTrabalhadas.Add(horasTrabalhadas);
                     }
-                    else
-                    {
-                        horasTrabalhadas.Duracao = TimeSpan.Zero;
-                    }
-
-                    horasTrabalhadas.Atividade = planilha.Cells[linha, 6].Text;
-                    horasTrabalhadas.Comentario = planilha.Cells[linha, 7].Text;
-
-                    horasTrabalhadas.Situacao = "ATUALIZADO"; 
-
-                    listaHorasTrabalhadas.Add(horasTrabalhadas);
                 }
             }
 
