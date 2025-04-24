@@ -52,6 +52,8 @@ namespace LancarHoras
             this.dgvHoras.Name = "dgvHoras";
             this.dgvHoras.Size = new System.Drawing.Size(813, 442);
             this.dgvHoras.TabIndex = 0;
+            this.dgvHoras.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvHoras_CellClick);
+            this.dgvHoras.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvHoras_CellContentClick);
             // 
             // label1
             // 
