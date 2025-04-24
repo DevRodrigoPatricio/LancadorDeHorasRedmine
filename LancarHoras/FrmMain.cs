@@ -16,6 +16,7 @@ namespace LancarHoras
     {
         private UnityContainer _container;
         private LancamentoHorasController lancamentoHorasController;
+        DateTimePicker dtp = new DateTimePicker();
 
         public FrmMain()
         {
@@ -190,6 +191,7 @@ namespace LancarHoras
         {
             try
             {
+                btnLancar.Enabled = false;
                 List<HorasTrabalhadas> horasLancadas = lancamentoHorasController.gethorasPorData(Convert.ToDateTime(txtData.Text));
 
                 foreach (HorasTrabalhadas horaLancada in horasLancadas)
@@ -201,8 +203,9 @@ namespace LancarHoras
                 }
 
                 MessageBox.Show("Horas lançadas com sucesso!");
-
+                
                 CarregarDadosDoBanco();
+                btnLancar.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -380,6 +383,39 @@ namespace LancarHoras
             catch (Exception ex)
             {
                 MessageBox.Show("Erro ao carregar os dados: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dgvHoras_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dgvHoras_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+      
+            if (e.ColumnIndex == 0 && e.RowIndex >= 0)
+            {
+                if (dtp.Parent != null)
+                    dgvHoras.Controls.Remove(dtp);
+
+                dtp.Format = DateTimePickerFormat.Short;
+                Rectangle rect = dgvHoras.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, true);
+                dtp.Size = rect.Size;
+                dtp.Location = rect.Location;
+
+                dtp.CloseUp += (s, ev) =>
+                {
+                    dgvHoras.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dtp.Value.ToShortDateString();
+                    dgvHoras.Controls.Remove(dtp);
+                };
+
+                dtp.TextChanged += (s, ev) =>
+                {
+                    dgvHoras.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dtp.Value.ToShortDateString();
+                };
+                dgvHoras.Controls.Add(dtp);
+                dtp.Focus();
             }
         }
     }
